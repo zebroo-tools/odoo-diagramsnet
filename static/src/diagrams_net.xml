@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 	<t t-name="diagrams_net.diagrams_net_widget" owl="1">
-		<div class="diagrams-net-container" t-ref="root_vis">
+		<div class="diagrams-net-container" t-ref="this.rootRef">
 		</div>
 	</t>
 </templates>

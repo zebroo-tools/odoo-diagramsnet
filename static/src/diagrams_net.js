@@ -3,32 +3,31 @@
 
 import { loadCSS, loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
-import { xml, onMounted, onWillUpdateProps, useState } from "@odoo/owl";
+import { onMounted, onWillUpdateProps, proxy, usePlugin, xml, useProps, signal } from "@odoo/owl";
 import { TextField } from '@web/views/fields/text/text_field';
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
-const { Component, onWillStart, useEffect, useRef, onWillRender } = owl;
+const { Component, onWillStart } = owl;
 
 export class Diagram extends owl.Component {
     static template = "diagrams_net.diagrams_net_widget";
     static displayName = "Diagram";
-    static defaultProps = {
-    };
-    static props = {
-        ...standardFieldProps,
-    };
+    props = useProps({
+      ...standardFieldProps,
+    });
     setup() {
         this.orm = useService("orm");
-        this.action = useService("action");
-        this.rootRef = useRef("root_vis");
+        this.action = usePlugin(ActionPlugin);
+        this.rootRef = signal.ref();
         this.network = null;
-        this.props = useState(this.props);
         onWillStart(async () => {
             await loadJS("/diagrams_net/static/lib/vis/vis-network.min.js");
             loadCSS("/diagrams_net/static/lib/vis/vis-network.min.css");
         });
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.renderNetwork();
         }, () => [this.props.record]);
         onWillRender(() => {
@@ -37,7 +36,7 @@ export class Diagram extends owl.Component {
     }
 
     get $el() {
-        return this.rootRef.el;
+        return this.rootRef();
     }
 
     get resId() {
