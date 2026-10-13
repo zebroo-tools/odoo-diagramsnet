@@ -10,7 +10,7 @@ permissions: write-all
 
 jobs:
   deploy-subversions:
-    uses: Odoo-Ninjas/git-workflows/.github/workflows/deploy_to_subversions.yml@v10
+    uses: zebroo-tools/git-workflows/.github/workflows/deploy_to_subversions.yml@v10
     with:
       branches: 15.0:main 16.0:main 17.0:main
       runner_label: ubuntu-latest
